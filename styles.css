@@ -1,0 +1,1542 @@
+:root {
+  --bg: #080808;
+  --text: #f4f1ea;
+  --muted: rgba(244, 241, 234, 0.74);
+  --soft: rgba(244, 241, 234, 0.5);
+  --faint: rgba(244, 241, 234, 0.32);
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --panel: rgba(8, 8, 8, 0.34);
+  --accent: linear-gradient(90deg, #58d4ff 0%, #d6c79a 52%, #ea8120 100%);
+  --shadow: 0 32px 90px rgba(0, 0, 0, 0.42);
+  --shadow-card: 0 18px 50px rgba(0, 0, 0, 0.32);
+  --shadow-card-hover: 0 30px 80px rgba(0, 0, 0, 0.5);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --space: clamp(40px, 6vw, 88px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 20% 12%, rgba(88, 212, 255, 0.08), transparent 22%),
+    radial-gradient(circle at 80% 20%, rgba(234, 129, 32, 0.05), transparent 24%),
+    var(--bg);
+  font-family: 'Manrope', sans-serif;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.016) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.016) 1px, transparent 1px);
+  background-size: 42px 42px;
+  pointer-events: none;
+  mask-image: radial-gradient(circle at center, black, transparent 88%);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 16% 22%, rgba(88, 212, 255, 0.12), transparent 20%),
+    radial-gradient(circle at 78% 18%, rgba(234, 129, 32, 0.08), transparent 24%),
+    radial-gradient(circle at 48% 82%, rgba(255, 255, 255, 0.06), transparent 22%);
+  filter: blur(18px);
+  animation: ambientFloat 18s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.particle-ui::after {
+  opacity: 0;
+}
+
+.site-shell {
+  width: min(1280px, calc(100% - 30px));
+  margin: 0 auto;
+  padding: 22px 0 44px;
+  position: relative;
+  z-index: 1;
+}
+
+body.particle-ui .site-shell {
+  min-height: 100vh;
+}
+
+.site-particles-scene {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.site-particles-canvas,
+.site-particles-glow,
+.site-particles-fade {
+  position: absolute;
+  inset: 0;
+}
+
+.site-particles-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 1;
+  mix-blend-mode: screen;
+}
+
+.site-particles-glow {
+  background:
+    radial-gradient(circle at 22% 24%, rgba(88, 212, 255, 0.08), transparent 18%),
+    radial-gradient(circle at 50% 72%, rgba(255, 255, 255, 0.05), transparent 22%);
+  filter: blur(10px);
+  animation: ambientFloat 18s ease-in-out infinite alternate;
+}
+
+.site-particles-fade {
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.03), transparent 22%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.2));
+}
+
+.site-particles-scene.site-particles-fallback {
+  background:
+    radial-gradient(circle at 22% 24%, rgba(88, 212, 255, 0.09), transparent 20%),
+    radial-gradient(circle at 78% 22%, rgba(234, 129, 32, 0.07), transparent 22%),
+    radial-gradient(circle at 50% 72%, rgba(255, 255, 255, 0.04), transparent 24%);
+}
+
+body.particle-ui .page-main,
+body.particle-ui .luxury-main {
+  position: relative;
+}
+
+body.particle-ui .site-header,
+body.particle-ui .site-footer,
+body.particle-ui .panel,
+body.particle-ui .project-card,
+body.particle-ui .article-card,
+body.particle-ui .luxury-note,
+body.particle-ui .luxury-links {
+  position: relative;
+  z-index: 1;
+}
+
+.luxury-shell {
+  width: min(1320px, calc(100% - 24px));
+}
+
+/* ---------- Header / Footer ---------- */
+
+.site-header,
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.site-header {
+  padding: 16px 2px 30px;
+  position: relative;
+  z-index: 4;
+}
+
+.brand,
+.main-nav a,
+.luxury-button,
+.luxury-links a {
+  text-decoration: none;
+}
+
+.brand {
+  color: var(--text);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: opacity 0.4s var(--ease);
+}
+
+.brand:hover {
+  opacity: 0.7;
+}
+
+.main-nav {
+  display: flex;
+  gap: 26px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.main-nav a {
+  position: relative;
+  color: var(--soft);
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 4px 0;
+  transition: color 0.35s var(--ease);
+}
+
+.main-nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: var(--text);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+
+.main-nav a:hover,
+.main-nav a:focus-visible {
+  color: var(--text);
+}
+
+.main-nav a:hover::after,
+.main-nav a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.main-nav a.active {
+  color: var(--text);
+}
+
+.main-nav a.active::after {
+  transform: scaleX(1);
+  background: var(--accent);
+  height: 2px;
+}
+
+.luxury-links a:hover {
+  color: var(--text);
+}
+
+/* ---------- Layout rhythm ---------- */
+
+.luxury-main,
+.page-main {
+  display: grid;
+  gap: var(--space);
+}
+
+.luxury-hero {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.1fr);
+  gap: 28px;
+  align-items: stretch;
+  min-height: calc(100vh - 150px);
+}
+
+.luxury-hero-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 0 12px 8px;
+}
+
+.hero-kicker,
+.note-label,
+.section-tag,
+.project-type {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 22px;
+}
+
+.hero-kicker::before {
+  content: '';
+  width: 34px;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* ---------- Type scale ---------- */
+
+.luxury-title,
+.page-hero h1,
+.panel h2,
+.project-card h2,
+.project-card h3,
+.article-card h2 {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+}
+
+.luxury-title {
+  font-size: clamp(5rem, 12vw, 9.8rem);
+  line-height: 0.9;
+}
+
+.luxury-subtitle {
+  max-width: 28rem;
+  margin: 16px 0 0;
+  font-size: clamp(1.12rem, 1.6vw, 1.45rem);
+  color: rgba(244, 241, 234, 0.86);
+  line-height: 1.6;
+}
+
+.luxury-rule {
+  width: min(100%, 430px);
+  height: 6px;
+  margin: 30px 0 28px;
+  background: var(--accent);
+  border-radius: 999px;
+}
+
+.luxury-description,
+.page-hero p,
+.panel p,
+.panel li,
+.project-card p,
+.article-card p,
+.luxury-note p {
+  color: var(--muted);
+  line-height: 1.85;
+  font-size: 1rem;
+}
+
+.luxury-description {
+  max-width: 35rem;
+  margin: 0;
+}
+
+/* lede: lead paragraph under section hero; narrow constrains its measure */
+.lede {
+  font-size: clamp(1.1rem, 1.5vw, 1.32rem);
+  line-height: 1.7;
+  color: rgba(244, 241, 234, 0.82);
+  margin: 18px 0 0;
+}
+
+.narrow {
+  max-width: 36rem;
+}
+
+/* ---------- Buttons ---------- */
+
+.luxury-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 34px;
+}
+
+.luxury-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  padding: 15px 26px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  transition: transform 0.45s var(--ease), background-color 0.4s var(--ease),
+    border-color 0.4s var(--ease), box-shadow 0.45s var(--ease), color 0.4s var(--ease);
+  will-change: transform;
+}
+
+.luxury-button-primary {
+  color: #080808;
+  background: #f4f1ea;
+  box-shadow: 0 10px 30px rgba(244, 241, 234, 0.12);
+}
+
+.luxury-button-primary:hover,
+.luxury-button-primary:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 44px rgba(244, 241, 234, 0.22);
+}
+
+.luxury-button-secondary {
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.luxury-button-secondary:hover,
+.luxury-button-secondary:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.luxury-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px rgba(88, 212, 255, 0.6);
+}
+
+/* ---------- Hero visual ---------- */
+
+.luxury-hero-visual {
+  position: relative;
+  min-height: 720px;
+  overflow: visible;
+  background: transparent;
+}
+
+.three-hero-scene {
+  position: absolute;
+  inset: 2% -6% -8% -8%;
+  overflow: visible;
+}
+
+.hero-canvas,
+.hero-fade,
+.portrait-shell,
+.hero-particle-glow {
+  position: absolute;
+}
+
+.hero-canvas {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 2;
+  mix-blend-mode: screen;
+  opacity: 1;
+}
+
+.hero-particle-glow {
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 48% 34%, rgba(255, 255, 255, 0.08), transparent 16%),
+    radial-gradient(circle at 54% 58%, rgba(120, 210, 255, 0.08), transparent 20%);
+  filter: blur(12px);
+}
+
+.hero-fade {
+  inset: 0;
+  z-index: 3;
+  /* Edge vignette: keep the face/torso clear, dissolve every outer edge of
+     the visual into the page black so the photo never reads as a rectangle. */
+  background:
+    radial-gradient(ellipse 76% 84% at 52% 46%, transparent 50%, rgba(8, 8, 8, 0.6) 76%, var(--bg) 100%),
+    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.03), transparent 22%),
+    linear-gradient(180deg, transparent 58%, var(--bg) 98%);
+}
+
+.portrait-shell {
+  left: 56%;
+  bottom: -4%;
+  width: min(60vw, 760px);
+  height: 108%;
+  transform: translateX(-50%);
+  overflow: hidden;
+  z-index: 0;
+}
+
+.luxury-portrait-shell {
+  border: 0;
+  box-shadow: none;
+}
+
+.hero-portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  filter: grayscale(1) contrast(1.12) brightness(0.78);
+  opacity: 0.96;
+  /* Dissolve the photo's edges into the star-field background on all sides
+     so the character emerges from the same dark field as the UI. */
+  -webkit-mask-image:
+    radial-gradient(ellipse 70% 80% at 52% 38%, #000 38%, transparent 82%),
+    linear-gradient(90deg, transparent 0%, #000 22%, #000 82%, transparent 100%),
+    linear-gradient(180deg, #000 0%, #000 30%, rgba(0, 0, 0, 0.55) 62%, transparent 90%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(ellipse 70% 80% at 52% 38%, #000 38%, transparent 82%),
+    linear-gradient(90deg, transparent 0%, #000 22%, #000 82%, transparent 100%),
+    linear-gradient(180deg, #000 0%, #000 30%, rgba(0, 0, 0, 0.55) 62%, transparent 90%);
+  mask-composite: intersect;
+}
+
+/* ---------- Hero bottom row / links ---------- */
+
+.luxury-bottom-row {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.05fr);
+  gap: 40px;
+  align-items: start;
+  padding: 8px 0 0 4px;
+}
+
+.luxury-note {
+  max-width: 32rem;
+}
+
+.note-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.note-label::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.luxury-note p {
+  margin: 14px 0 0;
+}
+
+.luxury-links {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.luxury-links a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 20px 18px 20px 0;
+  color: rgba(244, 241, 234, 0.78);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.4rem, 2vw, 2rem);
+  letter-spacing: -0.03em;
+  border-top: 1px solid transparent;
+  transition: color 0.4s var(--ease), padding-left 0.4s var(--ease);
+}
+
+.luxury-links a::after {
+  content: '\2197';
+  margin-left: auto;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.85rem;
+  color: var(--faint);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease), color 0.4s var(--ease);
+}
+
+.luxury-links a:hover,
+.luxury-links a:focus-visible {
+  color: var(--text);
+  padding-left: 6px;
+}
+
+.luxury-links a:hover::after,
+.luxury-links a:focus-visible::after {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--text);
+}
+
+.site-footer {
+  justify-content: space-between;
+  padding-top: 32px;
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+  color: var(--soft);
+  font-size: 0.86rem;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Panels & cards ---------- */
+
+.panel {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  padding: clamp(26px, 3.5vw, 40px);
+}
+
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 42%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.panel h2 {
+  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+  line-height: 1.05;
+}
+
+.panel h2 + p,
+.panel h2 + .bullet-list {
+  margin-top: 16px;
+}
+
+body.particle-ui .panel,
+body.particle-ui .project-card,
+body.particle-ui .article-card {
+  background: rgba(8, 8, 8, 0.24);
+  backdrop-filter: blur(14px);
+}
+
+body.particle-ui .site-header,
+body.particle-ui .site-footer {
+  backdrop-filter: blur(12px);
+}
+
+.page-hero h1 {
+  font-size: clamp(2.7rem, 6vw, 4.8rem);
+  line-height: 0.96;
+}
+
+.project-grid,
+.split-section,
+.article-list {
+  display: grid;
+  gap: 20px;
+}
+
+.project-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.project-grid-page {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.split-section {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.project-card,
+.article-card {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: clamp(24px, 2.4vw, 32px);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: transform 0.5s var(--ease), border-color 0.5s var(--ease),
+    box-shadow 0.5s var(--ease), background-color 0.5s var(--ease);
+}
+
+.project-card::after,
+.article-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.55s var(--ease);
+}
+
+.project-card:hover,
+.article-card:hover,
+.project-card:focus-within,
+.article-card:focus-within {
+  transform: translateY(-4px);
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.project-card:hover::after,
+.article-card:hover::after,
+.project-card:focus-within::after,
+.article-card:focus-within::after {
+  transform: scaleX(1);
+}
+
+.project-card h2,
+.project-card h3,
+.article-card h2 {
+  font-size: clamp(1.45rem, 2.2vw, 1.95rem);
+  line-height: 1.1;
+}
+
+.project-card h2 + p,
+.project-card h3 + p,
+.article-card h2 + p {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.project-type {
+  display: block;
+  margin-bottom: 16px;
+  color: var(--faint);
+}
+
+.bullet-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.bullet-list li {
+  margin-bottom: 8px;
+}
+
+.bullet-list li::marker {
+  color: var(--soft);
+}
+
+/* ---------- Long-scroll landing blocks (showcase panels) ---------- */
+
+/* perspective context so child translateZ/rotateX reads as depth, not skew */
+.luxury-main {
+  perspective: 1600px;
+  perspective-origin: 50% 30%;
+}
+
+/*
+ * Each .land-block is a full-bleed rounded SHOWCASE PANEL with its own
+ * rich gradient ground, soft gradient hairline, and deep shadow.
+ * --accent-1 is the per-section accent; base falls back to cyan and is
+ * overridden by the .land-block--* modifiers below.
+ */
+.land-block {
+  --accent-1: #58d4ff;
+  --accent-soft: rgba(88, 212, 255, 0.16);
+  position: relative;
+  width: 100%;
+  min-height: 84vh;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: clamp(22px, 2.6vw, 32px);
+  padding: clamp(40px, 6vw, 96px) clamp(26px, 5vw, 80px);
+  scroll-margin-top: 96px;
+  perspective: 1400px;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(120% 90% at 82% 8%, var(--accent-soft), transparent 52%),
+    radial-gradient(120% 120% at 8% 100%, rgba(255, 255, 255, 0.04), transparent 46%),
+    linear-gradient(158deg, rgba(20, 22, 28, 0.72), rgba(9, 10, 13, 0.66) 58%, rgba(6, 7, 9, 0.7));
+  box-shadow:
+    var(--shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(14px) saturate(1.05);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+}
+
+/* gradient hairline that picks up the section accent */
+.land-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(150deg,
+    color-mix(in srgb, var(--accent-1) 55%, rgba(255, 255, 255, 0.5)),
+    rgba(255, 255, 255, 0) 40%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* soft accent glow bleeding off the top-right corner of each panel */
+.land-block::after {
+  content: '';
+  position: absolute;
+  top: -18%;
+  right: -10%;
+  width: 46%;
+  height: 70%;
+  background: radial-gradient(circle at 60% 40%, var(--accent-1), transparent 62%);
+  opacity: 0.14;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---- per-section accents (multi-color journey) ---- */
+.land-block--cyan {
+  --accent-1: #58d4ff;
+  --accent-soft: rgba(88, 212, 255, 0.16);
+}
+.land-block--amber {
+  --accent-1: #e8b04b;
+  --accent-soft: rgba(232, 176, 75, 0.16);
+}
+.land-block--violet {
+  --accent-1: #8b6cff;
+  --accent-soft: rgba(139, 108, 255, 0.18);
+}
+.land-block--ember {
+  --accent-1: #ea8120;
+  --accent-soft: rgba(234, 129, 32, 0.16);
+}
+
+.land-block-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  transform: translateZ(0) rotateX(0deg);
+  transform-style: preserve-3d;
+  /* subtle settle as the block scrolls into rest; kept gentle */
+  transition: transform 0.8s var(--ease), opacity 0.8s var(--ease);
+  will-change: transform;
+}
+
+/* faint giant index numeral sitting behind the title; tinted by accent */
+.land-index {
+  position: absolute;
+  top: -0.35em;
+  left: -0.04em;
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: clamp(4rem, 10vw, 9rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--accent-1) 40%, rgba(244, 241, 234, 0.16));
+  text-stroke: 1px color-mix(in srgb, var(--accent-1) 40%, rgba(244, 241, 234, 0.16));
+  opacity: 0.9;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  transform: translateZ(-60px);
+}
+
+/* the section tag inside a panel gets an accent dot to anchor the color */
+.land-block .section-tag {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 8px;
+  color: color-mix(in srgb, var(--accent-1) 70%, var(--text));
+}
+
+.land-block .section-tag::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-1);
+  box-shadow: 0 0 14px var(--accent-1);
+}
+
+.land-title {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: clamp(2.7rem, 7.4vw, 6.4rem);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  color: var(--text);
+}
+
+/* accent hairline tucked under each panel title */
+.land-title::after {
+  content: '';
+  display: block;
+  width: clamp(64px, 8vw, 120px);
+  height: 4px;
+  margin-top: clamp(18px, 1.6vw, 26px);
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-1),
+    color-mix(in srgb, var(--accent-1) 30%, transparent));
+  box-shadow: 0 0 24px color-mix(in srgb, var(--accent-1) 50%, transparent);
+}
+
+.land-lead {
+  position: relative;
+  z-index: 1;
+  max-width: 46ch;
+  margin: clamp(18px, 2vw, 28px) 0 0;
+  color: var(--muted);
+  font-size: clamp(1.04rem, 1.4vw, 1.22rem);
+  line-height: 1.7;
+}
+
+.land-cta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: clamp(26px, 3vw, 38px);
+}
+
+/* slimmer connective tissue between distinct panels */
+.land-divider {
+  width: clamp(40px, 8vw, 120px);
+  height: 1px;
+  border: 0;
+  margin: 0 auto;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.34) 50%, transparent);
+  opacity: 0.6;
+}
+
+.land-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 40px);
+  align-items: start;
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(26px, 3vw, 44px);
+}
+
+/* project / article grids inside panels sit above the panel's glow + bring spacing */
+.land-block .project-grid,
+.land-block .article-list {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(28px, 3.4vw, 52px);
+}
+
+/* cards within a panel inherit the section accent for their top bar + glow */
+.land-block .project-card::after,
+.land-block .article-card::after {
+  background: linear-gradient(90deg, var(--accent-1),
+    color-mix(in srgb, var(--accent-1) 25%, transparent));
+}
+
+.land-block .project-card:hover,
+.land-block .article-card:hover,
+.land-block .project-card:focus-within,
+.land-block .article-card:focus-within {
+  border-color: color-mix(in srgb, var(--accent-1) 36%, var(--line-strong));
+}
+
+.land-block .project-card a,
+.land-block .article-card a {
+  color: color-mix(in srgb, var(--accent-1) 60%, var(--text));
+}
+
+/* ---------- Featured Work card (the hero of the grid) ---------- */
+
+.project-card.is-featured {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(240px, 26vw, 340px);
+  padding: clamp(30px, 3.4vw, 48px);
+  border-radius: clamp(20px, 2vw, 28px);
+  border-color: color-mix(in srgb, var(--accent-1) 30%, var(--line-strong));
+  background:
+    radial-gradient(110% 130% at 88% 6%, color-mix(in srgb, var(--accent-1) 26%, transparent), transparent 56%),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.012) 50%),
+    rgba(12, 13, 16, 0.5);
+  box-shadow:
+    var(--shadow-card),
+    0 0 0 1px color-mix(in srgb, var(--accent-1) 22%, transparent),
+    0 24px 80px color-mix(in srgb, var(--accent-1) 22%, transparent);
+}
+
+.project-card.is-featured h3 {
+  font-size: clamp(2rem, 3.6vw, 3.1rem);
+}
+
+.project-card.is-featured p {
+  max-width: 52ch;
+  font-size: clamp(1.02rem, 1.3vw, 1.16rem);
+}
+
+.project-card.is-featured .project-type {
+  color: color-mix(in srgb, var(--accent-1) 75%, var(--text));
+}
+
+.project-card.is-featured:hover,
+.project-card.is-featured:focus-within {
+  transform: translateY(-8px) translateZ(40px) scale(1.012);
+  border-color: color-mix(in srgb, var(--accent-1) 55%, var(--line-strong));
+  box-shadow:
+    var(--shadow-card-hover),
+    0 0 0 1px color-mix(in srgb, var(--accent-1) 40%, transparent),
+    0 36px 110px color-mix(in srgb, var(--accent-1) 34%, transparent);
+}
+
+/* ---------- Decorative glowing orb ---------- */
+
+.land-orb {
+  position: absolute;
+  top: 50%;
+  right: clamp(-120px, -6vw, -40px);
+  width: clamp(280px, 34vw, 520px);
+  height: clamp(280px, 34vw, 520px);
+  transform: translateY(-50%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+  filter: blur(2px);
+  background:
+    radial-gradient(circle at 50% 50%, transparent 40%, color-mix(in srgb, var(--accent-1) 60%, transparent) 41%, transparent 58%),
+    conic-gradient(from 0deg,
+      var(--accent-1),
+      color-mix(in srgb, var(--accent-1) 10%, transparent) 30%,
+      transparent 55%,
+      color-mix(in srgb, var(--accent-1) 40%, transparent) 80%,
+      var(--accent-1));
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 38%, #000 40%, #000 60%, transparent 64%);
+  mask: radial-gradient(circle at 50% 50%, transparent 38%, #000 40%, #000 60%, transparent 64%);
+  animation: orbSpin 38s linear infinite;
+}
+
+.land-orb::before {
+  content: '';
+  position: absolute;
+  inset: 22%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, color-mix(in srgb, var(--accent-1) 55%, #fff), var(--accent-1) 42%, transparent 72%);
+  filter: blur(14px);
+  opacity: 0.7;
+}
+
+@keyframes orbSpin {
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* ---------- Circular "scroll to discover" cue ---------- */
+
+.scroll-cue {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(108px, 12vw, 140px);
+  height: clamp(108px, 12vw, 140px);
+  margin: clamp(28px, 4vw, 56px) auto 0;
+}
+
+.scroll-cue-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: cueSpin 22s linear infinite;
+  fill: var(--soft);
+}
+
+.scroll-cue-ring text {
+  font-family: 'Manrope', sans-serif;
+  font-size: 8.6px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  fill: var(--soft);
+}
+
+.scroll-cue-dot {
+  position: relative;
+  z-index: 1;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text);
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.06), 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+@keyframes cueSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Background depth (lift off flat black) ---------- */
+
+body {
+  background:
+    radial-gradient(circle at 20% 12%, rgba(88, 212, 255, 0.08), transparent 22%),
+    radial-gradient(circle at 80% 20%, rgba(234, 129, 32, 0.05), transparent 24%),
+    radial-gradient(140% 120% at 50% -10%, rgba(28, 34, 44, 0.55), transparent 55%),
+    linear-gradient(180deg, #0b0d11 0%, var(--bg) 38%, #060606 100%);
+}
+
+/* ---------- Glassmorphism cards (depth, restraint) ---------- */
+
+.project-card,
+.article-card {
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012) 46%),
+    rgba(12, 13, 16, 0.42);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  transform: translateZ(0);
+  transition: transform 0.5s var(--ease), border-color 0.5s var(--ease),
+    box-shadow 0.5s var(--ease), background-color 0.5s var(--ease);
+}
+
+/* layered gradient hairline border (over the existing accent ::after bar) */
+.project-card::before,
+.article-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 44%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.project-card:hover,
+.article-card:hover,
+.project-card:focus-within,
+.article-card:focus-within {
+  transform: translateY(-6px) translateZ(28px) scale(1.012);
+  box-shadow: var(--shadow-card-hover);
+}
+
+body.particle-ui .project-card,
+body.particle-ui .article-card {
+  background:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01) 46%),
+    rgba(8, 8, 8, 0.3);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+}
+
+/* ---------- Focus visibility (a11y) ---------- */
+
+a:focus-visible {
+  outline: 2px solid rgba(88, 212, 255, 0.6);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@keyframes ambientFloat {
+  0% {
+    transform: translate3d(-1.5%, -1%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1%, 1.5%, 0) scale(1.04);
+  }
+  100% {
+    transform: translate3d(2%, -1%, 0) scale(1.08);
+  }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1080px) {
+  :root {
+    --space: clamp(36px, 5vw, 64px);
+  }
+
+  .luxury-hero,
+  .luxury-bottom-row,
+  .luxury-links,
+  .project-grid,
+  .project-grid-page,
+  .split-section {
+    grid-template-columns: 1fr;
+  }
+
+  .luxury-hero-visual {
+    min-height: 620px;
+  }
+
+  .portrait-shell {
+    width: min(76vw, 620px);
+    height: 105%;
+  }
+
+  .luxury-links {
+    gap: 0;
+  }
+
+  .luxury-links a {
+    border-top: 1px solid var(--line);
+    padding: 18px 4px;
+  }
+
+  .luxury-links a:first-child {
+    border-top: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .site-shell,
+  .luxury-shell {
+    width: min(100% - 18px, 1320px);
+  }
+
+  /* nav wraps onto its own line under the brand, never crashing into it */
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .main-nav {
+    width: 100%;
+    gap: 16px 20px;
+    justify-content: flex-start;
+  }
+
+  .main-nav a {
+    padding: 6px 0;
+  }
+
+  .luxury-hero {
+    gap: 8px;
+    min-height: auto;
+  }
+
+  .luxury-hero-copy {
+    padding: 4px 0;
+    order: 1;
+  }
+
+  /* portrait sits below the copy on phones, sized so it never dominates */
+  .luxury-hero-visual {
+    order: 2;
+    min-height: 64vw;
+    max-height: 460px;
+  }
+
+  .luxury-title {
+    font-size: clamp(3.6rem, 17vw, 6.4rem);
+  }
+
+  .luxury-subtitle {
+    font-size: clamp(1.06rem, 1.6vw, 1.3rem);
+  }
+
+  .three-hero-scene {
+    inset: 2% -4% -6% -4%;
+  }
+
+  .portrait-shell {
+    left: 50%;
+    width: min(92vw, 480px);
+    height: 104%;
+  }
+
+  /* CTAs become comfortable full-width tap targets that wrap cleanly */
+  .luxury-actions {
+    gap: 12px;
+  }
+
+  .luxury-actions .luxury-button {
+    flex: 1 1 100%;
+  }
+
+  .luxury-button {
+    min-height: 48px;
+    padding: 14px 24px;
+  }
+
+  .luxury-bottom-row {
+    gap: 28px;
+  }
+
+  .site-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* ---- inner pages: comfortable single-column padding ---- */
+  .panel {
+    padding: clamp(22px, 6vw, 32px);
+    border-radius: 20px;
+  }
+
+  /* ---- landing showcase panels ---- */
+  .land-block {
+    min-height: auto;
+    border-radius: clamp(18px, 4vw, 24px);
+    padding: clamp(30px, 8vw, 48px) clamp(20px, 6vw, 32px);
+  }
+
+  .land-block::after {
+    width: 70%;
+    height: 50%;
+  }
+
+  .land-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .land-title {
+    font-size: clamp(2.3rem, 9vw, 3.6rem);
+  }
+
+  .project-card.is-featured {
+    min-height: auto;
+  }
+
+  .land-index {
+    top: -0.25em;
+    font-size: clamp(3.4rem, 16vw, 6rem);
+  }
+
+  /* CTA buttons inside panels go full-width too for easy tapping */
+  .land-cta {
+    gap: 12px;
+  }
+
+  .land-cta .luxury-button {
+    flex: 1 1 100%;
+  }
+
+  /* orb pulled in tight / dimmed so it never overflows a narrow panel */
+  .land-orb {
+    right: -34%;
+    width: 64vw;
+    height: 64vw;
+    opacity: 0.38;
+  }
+}
+
+/* ---------- Tablets (481–820px): keep two-up where it reads well ---------- */
+
+@media (min-width: 481px) and (max-width: 820px) {
+  .project-grid-page,
+  .split-section,
+  .land-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* project-grid (homepage showcase, 3-up) stays single-column for breathing room */
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* CTAs need not be full-width on roomier tablets */
+  .luxury-actions .luxury-button,
+  .land-cta .luxury-button {
+    flex: 0 1 auto;
+  }
+}
+
+/* ---------- Small phones (320–480px) ---------- */
+
+@media (max-width: 480px) {
+  /* guard against any horizontal overflow on the smallest screens */
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  .site-shell,
+  .luxury-shell {
+    width: min(100% - 14px, 1320px);
+    padding: 18px 0 36px;
+  }
+
+  /* nav: tighter type/letter-spacing so 5 links fit two comfortable rows */
+  .brand {
+    font-size: 1.4rem;
+  }
+
+  .main-nav {
+    gap: 12px 16px;
+  }
+
+  .main-nav a {
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+  }
+
+  /* hero copy stays readable; title clamps so the name never overflows */
+  .luxury-title {
+    font-size: clamp(3rem, 16vw, 4.6rem);
+  }
+
+  .hero-kicker {
+    margin-bottom: 16px;
+    letter-spacing: 0.16em;
+  }
+
+  .luxury-rule {
+    margin: 22px 0 22px;
+  }
+
+  .luxury-actions {
+    margin-top: 26px;
+  }
+
+  .luxury-hero-visual {
+    min-height: 72vw;
+    max-height: 380px;
+  }
+
+  .portrait-shell {
+    width: min(96vw, 380px);
+  }
+
+  /* keep the scene inside the viewport — no negative-inset overflow */
+  .three-hero-scene {
+    inset: 2% 0 -4% 0;
+  }
+
+  /* landing panels: tighter radius + padding, smaller numerals/titles */
+  .land-block {
+    border-radius: 16px;
+    padding: clamp(26px, 7vw, 36px) clamp(16px, 5vw, 22px);
+    scroll-margin-top: 72px;
+  }
+
+  .land-index {
+    font-size: clamp(2.8rem, 15vw, 4.4rem);
+    top: -0.18em;
+  }
+
+  .land-title {
+    font-size: clamp(2rem, 8.4vw, 3rem);
+  }
+
+  .land-lead {
+    font-size: 1rem;
+  }
+
+  .project-card,
+  .article-card {
+    border-radius: 16px;
+    padding: 22px;
+  }
+
+  .project-card.is-featured {
+    padding: 24px;
+  }
+
+  .project-card.is-featured h3 {
+    font-size: clamp(1.7rem, 7vw, 2.2rem);
+  }
+
+  /* inner-page hero headline scaled for narrow measure */
+  .page-hero h1 {
+    font-size: clamp(2.2rem, 9vw, 3.2rem);
+  }
+
+  .panel {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  /* hero link list: roomier rows, smaller serif so arrows never wrap */
+  .luxury-links a {
+    font-size: clamp(1.25rem, 6vw, 1.6rem);
+    padding: 16px 2px;
+  }
+
+  /* decorative cues add nothing on tiny screens and risk crowding text */
+  .scroll-cue {
+    width: 92px;
+    height: 92px;
+    margin-top: 24px;
+  }
+
+  .land-orb {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body::after,
+  .site-particles-glow {
+    animation: none;
+  }
+
+  .luxury-button,
+  .project-card,
+  .article-card,
+  .main-nav a,
+  .main-nav a::after,
+  .luxury-links a,
+  .luxury-links a::after,
+  .project-card::after,
+  .article-card::after,
+  .land-block-inner {
+    transition: none;
+  }
+
+  /* disable 3D / parallax depth — keep layout flat and static */
+  .luxury-main {
+    perspective: none;
+  }
+
+  .land-block {
+    perspective: none;
+  }
+
+  .land-block-inner,
+  .land-index {
+    transform: none;
+  }
+
+  .project-card:hover,
+  .article-card:hover,
+  .project-card:focus-within,
+  .article-card:focus-within {
+    transform: translateY(-4px);
+  }
+
+  /* kill decorative + showcase motion and 3D depth */
+  .land-orb,
+  .scroll-cue-ring {
+    animation: none;
+  }
+
+  .project-card.is-featured:hover,
+  .project-card.is-featured:focus-within {
+    transform: translateY(-4px);
+  }
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog | Bishal Sarkar</title>
+    <meta
+      name="description"
+      content="Blog by Bishal Sarkar on forex ML, agentic systems, automation, and AI filmmaking — practical write-ups of what worked, what broke, and why."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="particle-ui">
+    <div class="site-particles-scene" aria-hidden="true">
+      <canvas class="site-particles-canvas"></canvas>
+      <div class="site-particles-glow"></div>
+      <div class="site-particles-fade"></div>
+    </div>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="index.html">Bishal Sarkar</a>
+        <nav class="main-nav" aria-label="Primary">
+          <a href="index.html">Explore</a>
+          <a href="about.html">About</a>
+          <a href="projects.html">Projects</a>
+          <a class="active" href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </header>
+
+      <main class="page-main">
+        <section class="panel page-hero">
+          <p class="section-tag">Blog</p>
+          <h1>Field notes from the work, not think-pieces.</h1>
+          <p class="lede narrow">
+            Short, practical write-ups on the things I'm actually building — a backtest that lied to
+            me, an agent pipeline that paid for itself, a filmmaking trick that finally clicked.
+            Written so the next person skips the mistake.
+          </p>
+        </section>
+
+        <section class="article-list" aria-label="Blog archive">
+          <article class="panel article-card">
+            <p class="section-tag">Forex ML</p>
+            <h2>The Backtest That Lied to Me</h2>
+            <p>
+              How a 70% win-rate model fell apart out of sample, and the walk-forward discipline I
+              now run before trusting any equity curve.
+            </p>
+          </article>
+          <article class="panel article-card">
+            <p class="section-tag">Agentic Systems</p>
+            <h2>Wiring 100+ Agents Without Losing the Plot</h2>
+            <p>
+              RAG-based routing, per-provider rate limits, and the failure modes that show up only
+              when many specialized agents share one pipeline.
+            </p>
+          </article>
+          <article class="panel article-card">
+            <p class="section-tag">Automation</p>
+            <h2>Designing Workflows That Fail Gracefully</h2>
+            <p>
+              Retries, idempotency, and logging — the unglamorous parts that decide whether an
+              automation saves time or quietly creates more work.
+            </p>
+          </article>
+          <article class="panel article-card">
+            <p class="section-tag">AI Filmmaking</p>
+            <h2>Holding Continuity Across Generated Shots</h2>
+            <p>
+              Keeping character, light, and mood consistent frame to frame — the prompting and
+              editing process behind a coherent AI-directed cut.
+            </p>
+          </article>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <p>Bishal Sarkar • Blog</p>
+      </footer>
+    </div>
+    <script type="module" src="site-particles.js"></script>
+  </body>
+</html>
