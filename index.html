@@ -24,7 +24,7 @@
       <div class="site-particles-fade"></div>
     </div>
     <div class="site-shell luxury-shell">
-      <header class="site-header luxury-header">
+      <header id="top" class="site-header luxury-header">
         <a class="brand" href="index.html">Bishal Sarkar</a>
       </header>
 
@@ -71,37 +71,76 @@
             </p>
           </div>
 
-          <nav class="landing-page-block landing-page-block--section" aria-label="Portfolio pages">
+          <nav class="landing-page-block landing-page-block--section landing-icon-block" aria-label="Portfolio pages">
             <a class="landing-page-card landing-page-card--about" href="about.html">
+              <span class="landing-icon-3d" id="landing-about" aria-hidden="true"></span>
               <span class="landing-page-card-index">01</span>
               <span class="landing-page-card-title">About</span>
               <span class="landing-page-card-note">Story</span>
             </a>
             <a class="landing-page-card landing-page-card--projects" href="projects.html">
+              <span class="landing-icon-3d" id="landing-projects" aria-hidden="true"></span>
               <span class="landing-page-card-index">02</span>
               <span class="landing-page-card-title">Projects</span>
-              <span class="landing-page-card-note">Selected Work</span>
+              <span class="landing-page-card-note">Project</span>
             </a>
             <a class="landing-page-card landing-page-card--blog" href="blog.html">
+              <span class="landing-icon-3d" id="landing-blog" aria-hidden="true"></span>
               <span class="landing-page-card-index">03</span>
               <span class="landing-page-card-title">Blog</span>
               <span class="landing-page-card-note">Notes</span>
             </a>
             <a class="landing-page-card landing-page-card--contact" href="contact.html">
+              <span class="landing-icon-3d" id="landing-contact" aria-hidden="true"></span>
               <span class="landing-page-card-index">04</span>
               <span class="landing-page-card-title">Contact</span>
-              <span class="landing-page-card-note">Build</span>
+              <span class="landing-page-card-note">Connect</span>
             </a>
           </nav>
         </section>
       </main>
 
-      <footer class="site-footer luxury-footer">
-        <p>Bishal Sarkar · AI Engineer · Forex ML · AI Filmmaking</p>
+      <footer class="site-footer site-footer--rich luxury-footer">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <a class="footer-logo" href="index.html">Bishal Sarkar</a>
+            <p class="footer-tagline">
+              AI engineer building machine-learning models for forex, automation that
+              removes the busywork, and cinematic AI films.
+            </p>
+            <ul class="footer-social" aria-label="Elsewhere">
+              <li><a href="https://github.com/bishallllllll" rel="me noopener" target="_blank">GitHub</a></li>
+              <li><a href="https://instagram.com/bishal_sarkarr" rel="me noopener" target="_blank">Instagram</a></li>
+              <li><a href="https://www.linkedin.com/in/bishal-sarkar-839aa3284/" rel="me noopener" target="_blank">LinkedIn</a></li>
+              <li><a href="mailto:bishalarkar443@gmail.com">Email</a></li>
+            </ul>
+          </div>
+          <nav class="footer-nav" aria-label="Footer">
+            <p class="footer-nav-title">Explore</p>
+            <a href="index.html" aria-current="page">Home</a>
+            <a href="about.html">About</a>
+            <a href="projects.html">Projects</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">© 2026 Bishal Sarkar — All rights reserved.</p>
+          <a class="footer-top-link" href="#top">Back to top ↑</a>
+        </div>
       </footer>
     </div>
     <script src="scroll-line.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.166.1/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.166.1/examples/jsm/"
+        }
+      }
+    </script>
     <script type="module" src="site-particles.js"></script>
     <script type="module" src="explore-hero.js"></script>
+    <script type="module" src="landing-icons-3d.js"></script>
   </body>
 </html>
