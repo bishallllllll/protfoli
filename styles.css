@@ -458,11 +458,34 @@ body.particle-ui .luxury-links {
   --icon-fg: #f4f9ff;
 }
 
+.luxury-button-icon--gmail {
+  --icon-a: #fff9f3;
+  --icon-b: #f0d5c8;
+  --icon-shadow: rgba(234, 67, 53, 0.34);
+}
+
+.luxury-button-icon--gmail svg {
+  width: 1.12rem;
+  height: 1.12rem;
+  fill: none;
+  stroke: none;
+}
+
+.luxury-button-icon--gmail svg path {
+  stroke: none;
+}
+
 .luxury-button-primary .luxury-button-icon {
   --icon-a: #fff4e4;
   --icon-b: #e18a2c;
   --icon-shadow: rgba(234, 129, 32, 0.45);
   --icon-fg: #18110d;
+}
+
+.luxury-button-primary .luxury-button-icon--gmail {
+  --icon-a: #fff9f3;
+  --icon-b: #f0d5c8;
+  --icon-shadow: rgba(234, 67, 53, 0.34);
 }
 
 .luxury-button-primary {
@@ -1166,50 +1189,6 @@ body.particle-ui .site-footer {
   to { transform: translateY(-50%) rotate(360deg); }
 }
 
-/* ---------- Circular "scroll to discover" cue ---------- */
-
-.scroll-cue {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: clamp(108px, 12vw, 140px);
-  height: clamp(108px, 12vw, 140px);
-  margin: clamp(28px, 4vw, 56px) auto 0;
-}
-
-.scroll-cue-ring {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  animation: cueSpin 22s linear infinite;
-  fill: var(--soft);
-}
-
-.scroll-cue-ring text {
-  font-family: 'Manrope', sans-serif;
-  font-size: 8.6px;
-  font-weight: 700;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  fill: var(--soft);
-}
-
-.scroll-cue-dot {
-  position: relative;
-  z-index: 1;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--text);
-  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.06), 0 0 20px rgba(255, 255, 255, 0.4);
-}
-
-@keyframes cueSpin {
-  to { transform: rotate(360deg); }
-}
-
 /* ---------- Background depth (lift off flat black) ---------- */
 
 body {
@@ -1595,13 +1574,6 @@ a:focus-visible {
     padding: 16px 2px;
   }
 
-  /* decorative cues add nothing on tiny screens and risk crowding text */
-  .scroll-cue {
-    width: 92px;
-    height: 92px;
-    margin-top: 24px;
-  }
-
   .land-orb {
     display: none;
   }
@@ -1652,8 +1624,7 @@ a:focus-visible {
   }
 
   /* kill decorative + showcase motion and 3D depth */
-  .land-orb,
-  .scroll-cue-ring {
+  .land-orb {
     animation: none;
   }
 
