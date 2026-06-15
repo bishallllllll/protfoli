@@ -613,14 +613,12 @@ body.particle-ui .luxury-links {
 }
 
 .landing-page-block {
-  position: absolute;
-  right: clamp(10px, 4vw, 70px);
-  top: 50%;
+  position: relative;
   z-index: 5;
   display: grid;
   grid-template-columns: repeat(2, minmax(150px, 1fr));
   gap: clamp(14px, 1.8vw, 22px);
-  width: min(43vw, 600px);
+  width: min(100%, 600px);
   padding: clamp(18px, 2.4vw, 30px);
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 34px;
@@ -633,7 +631,6 @@ body.particle-ui .luxury-links {
     inset 0 1px 0 rgba(255, 255, 255, 0.2),
     inset 0 -28px 44px rgba(0, 0, 0, 0.14);
   backdrop-filter: blur(3px) saturate(1.18);
-  transform: translateY(-45%) perspective(1000px) rotateX(8deg) rotateY(-14deg) rotateZ(1deg);
   transform-style: preserve-3d;
   pointer-events: auto;
 }
@@ -760,6 +757,48 @@ body.particle-ui .luxury-links {
 
 .landing-page-card-note {
   color: rgba(244, 241, 234, 0.46);
+}
+
+.landing-panel-section {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(260px, 0.55fr) minmax(420px, 1fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: center;
+  min-height: min(760px, 82vh);
+  padding: clamp(44px, 7vw, 90px) 0 clamp(54px, 8vw, 110px);
+  perspective: 1200px;
+}
+
+.landing-panel-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 34rem;
+}
+
+.landing-panel-title {
+  margin: 16px 0 0;
+  font-family: 'Bodoni Moda', serif;
+  font-size: clamp(3.2rem, 7vw, 7.4rem);
+  line-height: 0.88;
+  letter-spacing: -0.08em;
+}
+
+.landing-panel-lead {
+  margin: 24px 0 0;
+  color: rgba(244, 241, 234, 0.68);
+  font-size: clamp(1rem, 1.4vw, 1.18rem);
+  line-height: 1.8;
+}
+
+.landing-page-block--section {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: min(100%, 720px);
+  min-height: 470px;
+  justify-self: end;
+  transform: perspective(1100px) rotateX(8deg) rotateY(-12deg) rotateZ(1deg);
 }
 
 /* ---------- Hero bottom row / links ---------- */
@@ -1437,10 +1476,14 @@ a:focus-visible {
     min-height: 620px;
   }
 
-  .landing-page-block {
-    right: 0;
-    width: min(58vw, 540px);
-    transform: translateY(-42%) perspective(900px) rotateX(7deg) rotateY(-10deg);
+  .landing-panel-section {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-page-block--section {
+    justify-self: center;
+    width: min(100%, 620px);
+    transform: perspective(950px) rotateX(7deg) rotateY(-8deg);
   }
 
   .portrait-shell {
@@ -1505,14 +1548,15 @@ a:focus-visible {
     max-height: 460px;
   }
 
-  .landing-page-block {
-    left: 50%;
-    right: auto;
-    top: 52%;
+  .landing-panel-section {
+    min-height: auto;
+  }
+
+  .landing-page-block--section {
     width: min(100%, 560px);
     grid-template-columns: repeat(2, minmax(0, 1fr));
     border-radius: 28px;
-    transform: translate(-50%, -50%) perspective(820px) rotateX(5deg) rotateY(-5deg);
+    transform: perspective(820px) rotateX(5deg) rotateY(-5deg);
   }
 
   .landing-page-card {
@@ -1688,9 +1732,10 @@ a:focus-visible {
     max-height: 380px;
   }
 
-  .landing-page-block {
+  .landing-page-block--section {
     padding: 14px;
     gap: 12px;
+    transform: none;
   }
 
   .landing-page-card {
