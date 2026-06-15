@@ -87,8 +87,10 @@ function buildIcon(container, icon, loader, index) {
 
   const material = new THREE.MeshStandardMaterial({
     color: icon.color,
-    metalness: 0.4,
-    roughness: 0.35,
+    metalness: 0.55,
+    roughness: 0.22,
+    emissive: new THREE.Color(icon.color),
+    emissiveIntensity: 0.45,
   });
 
   const shapes = [];
@@ -123,13 +125,21 @@ function buildIcon(container, icon, loader, index) {
     .getCenter(new THREE.Vector3());
   logo.position.set(-center.x, -center.y, -center.z);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 1.1));
-  const key = new THREE.DirectionalLight(0xffffff, 1.6);
+  // Neon-3D lighting: soft ambient + bright key + a coloured accent glow
+  // that picks up the icon's own hue for that emissive, glossy reference look.
+  scene.add(new THREE.AmbientLight(0xffffff, 0.85));
+  const key = new THREE.DirectionalLight(0xffffff, 1.8);
   key.position.set(3, 4, 5);
   scene.add(key);
-  const rim = new THREE.DirectionalLight(0x88aaff, 0.8);
+  const rim = new THREE.DirectionalLight(0x88aaff, 0.9);
   rim.position.set(-4, -2, 2);
   scene.add(rim);
+  const accentGlow = new THREE.PointLight(icon.color, 2.4, 14, 2);
+  accentGlow.position.set(-2.5, -2.5, 3.5);
+  scene.add(accentGlow);
+  const topGlow = new THREE.PointLight(0xffffff, 1.2, 12, 2);
+  topGlow.position.set(1.5, 3, 2.5);
+  scene.add(topGlow);
 
   let targetX = 0;
   let targetY = 0;
@@ -172,6 +182,10 @@ function buildIcon(container, icon, loader, index) {
       pivot.position.y = Math.sin(t) * 0.22;
       pivot.position.x = Math.cos(t * 0.6) * 0.08;
     }
+    // Icon glows brighter on hover, eases back when not.
+    const targetEmissive = hovered ? 0.95 : 0.45;
+    material.emissiveIntensity += (targetEmissive - material.emissiveIntensity) * 0.12;
+    accentGlow.intensity += ((hovered ? 3.6 : 2.4) - accentGlow.intensity) * 0.12;
     renderer.render(scene, camera);
   }
   animate();

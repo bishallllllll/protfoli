@@ -16,7 +16,7 @@
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body class="particle-ui">
+  <body class="particle-ui inner-page inner-page-projects">
     <div class="site-particles-scene" aria-hidden="true">
       <canvas class="site-particles-canvas"></canvas>
       <div class="site-particles-glow"></div>
@@ -35,123 +35,100 @@
       </header>
 
       <main class="page-main">
-        <section class="panel page-hero">
+        <section class="panel page-hero inner-glass-panel inner-glass-panel--amber">
           <p class="section-tag">Projects</p>
           <h1>Models that trade, agents that run, tools that ship.</h1>
           <p class="lede narrow">
             A working archive of repositories across forex ML, agentic systems, automation, and the
-            infrastructure that holds them together. Each entry links straight to the code and
-            describes what it actually does — no invented metrics.
+            infrastructure that holds them together. Each entry explains what it does, and the code
+            lives behind a cleaner call-to-action instead of raw visible links.
           </p>
           <p>
             <a
+              class="project-cta-button project-cta-button--hero"
               href="https://github.com/bishallllllll"
               target="_blank"
               rel="noopener"
-              >View all repositories on GitHub →</a
+              >View all repositories</a
             >
           </p>
         </section>
 
         <section class="project-grid project-grid-page" aria-label="Forex ML projects">
-          <article class="project-card">
+          <article class="project-card inner-glass-card">
             <span class="project-type">Forex ML</span>
-            <h2>
-              <a
-                href="https://github.com/bishallllllll/forex-ml"
-                target="_blank"
-                rel="noopener"
-                >forex-ml</a
-              >
-            </h2>
+            <h2>forex-ml</h2>
             <p>
               A forex ML pipeline pairing XGBoost with a Temporal Fusion Transformer in an ensemble,
               validated through walk-forward backtesting to keep results honest out of sample.
               (Jupyter)
             </p>
+            <p class="project-actions">
+              <a class="project-cta-button" href="https://github.com/bishallllllll/forex-ml" target="_blank" rel="noopener">Open project</a>
+            </p>
           </article>
-          <article class="project-card">
+          <article class="project-card inner-glass-card">
             <span class="project-type">Forex ML</span>
-            <h2>
-              <a
-                href="https://github.com/bishallllllll/AlphaForgeFX"
-                target="_blank"
-                rel="noopener"
-                >AlphaForgeFX</a
-              >
-            </h2>
+            <h2>AlphaForgeFX</h2>
             <p>
               FX alpha and strategy research in Python — a workspace for prototyping and evaluating
               trading signals. (Python)
+            </p>
+            <p class="project-actions">
+              <a class="project-cta-button" href="https://github.com/bishallllllll/AlphaForgeFX" target="_blank" rel="noopener">Open project</a>
             </p>
           </article>
         </section>
 
         <section class="project-grid project-grid-page" aria-label="Agentic systems projects">
-          <article class="project-card">
+          <article class="project-card inner-glass-card">
             <span class="project-type">Agentic Systems</span>
-            <h2>
-              <a
-                href="https://github.com/bishallllllll/forex-agentic"
-                target="_blank"
-                rel="noopener"
-                >forex-agentic</a
-              >
-            </h2>
+            <h2>forex-agentic</h2>
             <p>
               An agentic forex trading system where autonomous agents run a 7-day broker-competition
               trading workflow end to end. (Python)
             </p>
+            <p class="project-actions">
+              <a class="project-cta-button" href="https://github.com/bishallllllll/forex-agentic" target="_blank" rel="noopener">Open project</a>
+            </p>
           </article>
-          <article class="project-card">
+          <article class="project-card inner-glass-card">
             <span class="project-type">Agentic Systems</span>
-            <h2>
-              <a
-                href="https://github.com/bishallllllll/multi-agent-pipeline"
-                target="_blank"
-                rel="noopener"
-                >multi-agent-pipeline</a
-              >
-            </h2>
+            <h2>multi-agent-pipeline</h2>
             <p>
               A standalone multi-agent pipeline coordinating 137 specialized AI agents, calling
               OpenAI, Anthropic, and Gemini via direct API with RAG-based routing. (Python)
+            </p>
+            <p class="project-actions">
+              <a class="project-cta-button" href="https://github.com/bishallllllll/multi-agent-pipeline" target="_blank" rel="noopener">Open project</a>
             </p>
           </article>
         </section>
 
         <section class="project-grid project-grid-page" aria-label="Automation projects">
-          <article class="project-card">
+          <article class="project-card inner-glass-card">
             <span class="project-type">Automation</span>
-            <h2>
-              <a
-                href="https://github.com/bishallllllll/social-publisher"
-                target="_blank"
-                rel="noopener"
-                >social-publisher</a
-              >
-            </h2>
+            <h2>social-publisher</h2>
             <p>
               AI-powered social publishing — multi-platform scheduling, trend analysis, content
               generation, and engagement automation in one toolkit. (Python)
+            </p>
+            <p class="project-actions">
+              <a class="project-cta-button" href="https://github.com/bishallllllll/social-publisher" target="_blank" rel="noopener">Open project</a>
             </p>
           </article>
         </section>
 
         <section class="project-grid project-grid-page" aria-label="Infrastructure projects">
-          <article class="project-card">
+          <article class="project-card inner-glass-card">
             <span class="project-type">Infra</span>
-            <h2>
-              <a
-                href="https://github.com/bishallllllll/hermes-nvidia-rate-limiter"
-                target="_blank"
-                rel="noopener"
-                >hermes-nvidia-rate-limiter</a
-              >
-            </h2>
+            <h2>hermes-nvidia-rate-limiter</h2>
             <p>
               A rate-limiting utility for NVIDIA-hosted LLM API calls, built to keep agent pipelines
               within provider limits. (Python)
+            </p>
+            <p class="project-actions">
+              <a class="project-cta-button" href="https://github.com/bishallllllll/hermes-nvidia-rate-limiter" target="_blank" rel="noopener">Open project</a>
             </p>
           </article>
         </section>
