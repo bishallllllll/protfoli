@@ -15,6 +15,9 @@ if (canvas) {
   if (supportsWebGL && sceneRoot) {
     import('https://unpkg.com/three@0.166.1/build/three.module.js')
       .then((THREE) => {
+        const prefersReducedMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)',
+        ).matches;
         const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
@@ -22,78 +25,120 @@ if (canvas) {
         const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 120);
         camera.position.z = 11;
 
-        const ambient = new THREE.AmbientLight(0xffffff, 0.28);
-        scene.add(ambient);
+        const starLayers = [
+          { count: 4200, spread: [20, 22, 14], size: 0.034, opacity: 0.88 },
+          { count: 2400, spread: [26, 26, 20], size: 0.055, opacity: 0.38 },
+          { count: 1200, spread: [14, 16, 10], size: 0.08, opacity: 0.18 },
+        ];
 
-        const coolLight = new THREE.PointLight(0x8edaff, 0.28, 18);
-        coolLight.position.set(-3.4, 2.2, 6.4);
-        scene.add(coolLight);
+        const starGroups = starLayers.map((layer, layerIndex) => {
+          const positions = new Float32Array(layer.count * 3);
+          const basePositions = new Float32Array(layer.count * 3);
+          const colors = new Float32Array(layer.count * 3);
+          const gatherOffsets = new Float32Array(layer.count * 2);
 
-        const warmLight = new THREE.PointLight(0xdce8ff, 0.16, 16);
-        warmLight.position.set(3.6, -1.6, 5.8);
-        scene.add(warmLight);
+          for (let i = 0; i < layer.count; i += 1) {
+            const i3 = i * 3;
+            positions[i3] = (Math.random() - 0.5) * layer.spread[0];
+            positions[i3 + 1] = (Math.random() - 0.5) * layer.spread[1];
+            positions[i3 + 2] = (Math.random() - 0.5) * layer.spread[2];
+            basePositions[i3] = positions[i3];
+            basePositions[i3 + 1] = positions[i3 + 1];
+            basePositions[i3 + 2] = positions[i3 + 2];
 
-        const particleCount = 4200;
-        const positions = new Float32Array(particleCount * 3);
-        const colors = new Float32Array(particleCount * 3);
+            const gatherAngle = Math.random() * Math.PI * 2;
+            const gatherRadius = 0.08 + (Math.pow(Math.random(), 1.8) * (0.85 + (layerIndex * 0.2)));
+            gatherOffsets[i * 2] = Math.cos(gatherAngle) * gatherRadius;
+            gatherOffsets[(i * 2) + 1] = Math.sin(gatherAngle) * gatherRadius;
 
-        for (let i = 0; i < particleCount; i += 1) {
-          const i3 = i * 3;
-          positions[i3] = (Math.random() - 0.5) * 20;
-          positions[i3 + 1] = (Math.random() - 0.5) * 22;
-          positions[i3 + 2] = (Math.random() - 0.5) * 14;
-
-          // Per-star brightness gives crisp depth instead of a uniform haze.
-          const brightness = 0.55 + Math.pow(Math.random(), 1.6) * 0.45;
-          const tone = Math.random();
-          if (tone < 0.78) {
-            // Crisp white.
-            colors[i3] = brightness;
-            colors[i3 + 1] = brightness;
-            colors[i3 + 2] = brightness * 0.99;
-          } else if (tone < 0.97) {
-            // Cool blue.
-            colors[i3] = brightness * 0.7;
-            colors[i3 + 1] = brightness * 0.86;
-            colors[i3 + 2] = brightness;
-          } else {
-            // Faint warm highlight to echo the accent gradient.
-            colors[i3] = brightness;
-            colors[i3 + 1] = brightness * 0.92;
-            colors[i3 + 2] = brightness * 0.82;
+            const brightness = 0.52 + Math.pow(Math.random(), 1.55) * 0.48;
+            const tone = Math.random();
+            if (tone < 0.74) {
+              colors[i3] = brightness;
+              colors[i3 + 1] = brightness;
+              colors[i3 + 2] = brightness * 0.99;
+            } else if (tone < 0.94) {
+              colors[i3] = brightness * 0.7;
+              colors[i3 + 1] = brightness * 0.86;
+              colors[i3 + 2] = brightness;
+            } else {
+              colors[i3] = brightness;
+              colors[i3 + 1] = brightness * 0.92;
+              colors[i3 + 2] = brightness * 0.82;
+            }
           }
+
+          const geometry = new THREE.BufferGeometry();
+          geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+          geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+          const material = new THREE.PointsMaterial({
+            size: layer.size,
+            transparent: true,
+            opacity: layer.opacity,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            sizeAttenuation: true,
+          });
+
+          const points = new THREE.Points(geometry, material);
+          points.rotation.z = layerIndex * 0.18;
+          scene.add(points);
+          return {
+            points,
+            material,
+            geometry,
+            positions,
+            basePositions,
+            gatherOffsets,
+            depth: layerIndex + 1,
+          };
+        });
+
+        // A sparse foreground layer gives the field readable motion instead of
+        // relying only on the very slow rotation of distant stars.
+        const movingParticleCount = 180;
+        const movingPositions = new Float32Array(movingParticleCount * 3);
+        const movingColors = new Float32Array(movingParticleCount * 3);
+        const movingVelocities = [];
+
+        for (let i = 0; i < movingParticleCount; i += 1) {
+          const i3 = i * 3;
+          movingPositions[i3] = (Math.random() - 0.5) * 18;
+          movingPositions[i3 + 1] = (Math.random() - 0.5) * 12;
+          movingPositions[i3 + 2] = 1 + (Math.random() * 5);
+
+          const warm = Math.random() > 0.84;
+          movingColors[i3] = warm ? 1 : 0.62 + (Math.random() * 0.28);
+          movingColors[i3 + 1] = warm ? 0.78 : 0.82 + (Math.random() * 0.18);
+          movingColors[i3 + 2] = warm ? 0.48 : 1;
+          movingVelocities.push({
+            x: 0.08 + (Math.random() * 0.2),
+            y: 0.16 + (Math.random() * 0.34),
+            phase: Math.random() * Math.PI * 2,
+          });
         }
 
-        const particlesGeometry = new THREE.BufferGeometry();
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-        const particlesMaterial = new THREE.PointsMaterial({
-          size: 0.038,
+        const movingGeometry = new THREE.BufferGeometry();
+        movingGeometry.setAttribute('position', new THREE.BufferAttribute(movingPositions, 3));
+        movingGeometry.setAttribute('color', new THREE.BufferAttribute(movingColors, 3));
+        const movingMaterial = new THREE.PointsMaterial({
+          size: 0.055,
           transparent: true,
-          opacity: 0.92,
+          opacity: 0.74,
           vertexColors: true,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
           sizeAttenuation: true,
         });
+        const movingParticles = new THREE.Points(movingGeometry, movingMaterial);
+        scene.add(movingParticles);
 
-        const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particles);
-
-        const ringGeometry = new THREE.TorusGeometry(4.8, 0.018, 10, 220);
-        const ringMaterial = new THREE.MeshBasicMaterial({
-          color: 0xe8edf5,
-          transparent: true,
-          opacity: 0.03,
-        });
-        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-        ring.rotation.x = Math.PI / 2.6;
-        ring.rotation.y = Math.PI / 6;
-        ring.position.set(1.2, 0.3, -1);
-        scene.add(ring);
-
-        const pointer = { x: 0, y: 0 };
+        const pointer = { x: 0, y: 0, active: false, strength: 0 };
+        let scrollVelocity = 0;
+        let previousScrollY = window.scrollY;
+        let touchReleaseTimer = 0;
 
         function resize() {
           const { clientWidth, clientHeight } = sceneRoot;
@@ -105,40 +150,120 @@ if (canvas) {
         function onPointerMove(event) {
           pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
           pointer.y = (event.clientY / window.innerHeight) * 2 - 1;
+          pointer.active = true;
+        }
+
+        function onPointerDown(event) {
+          onPointerMove(event);
+          if (event.pointerType === 'touch') {
+            window.clearTimeout(touchReleaseTimer);
+          }
+        }
+
+        function onPointerUp(event) {
+          if (event.pointerType === 'touch') {
+            touchReleaseTimer = window.setTimeout(() => {
+              pointer.active = false;
+            }, 220);
+          }
         }
 
         function onPointerLeave() {
-          pointer.x = 0;
-          pointer.y = 0;
+          pointer.active = false;
         }
 
-        window.addEventListener('pointermove', onPointerMove);
-        window.addEventListener('pointerleave', onPointerLeave);
+        function onScroll() {
+          const delta = window.scrollY - previousScrollY;
+          scrollVelocity = Math.max(-2.2, Math.min(2.2, delta * 0.018));
+          previousScrollY = window.scrollY;
+        }
+
+        if (!prefersReducedMotion) {
+          window.addEventListener('pointermove', onPointerMove, { passive: true });
+          window.addEventListener('pointerdown', onPointerDown, { passive: true });
+          window.addEventListener('pointerup', onPointerUp, { passive: true });
+          window.addEventListener('pointercancel', onPointerUp, { passive: true });
+          window.addEventListener('pointerleave', onPointerLeave);
+          window.addEventListener('scroll', onScroll, { passive: true });
+        }
         window.addEventListener('resize', resize);
         resize();
 
         const clock = new THREE.Clock();
+        let previousElapsed = 0;
 
         function animate() {
           const elapsed = clock.getElapsedTime();
+          const delta = Math.min(elapsed - previousElapsed, 0.04);
+          previousElapsed = elapsed;
+          pointer.strength += ((pointer.active ? 1 : 0) - pointer.strength) * 0.085;
+          const viewHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)) * camera.position.z;
+          const pointerWorldX = pointer.x * viewHeight * camera.aspect * 0.5;
+          const pointerWorldY = -pointer.y * viewHeight * 0.5;
 
-          particles.rotation.y = elapsed * 0.006;
-          particles.rotation.x = Math.sin(elapsed * 0.03) * 0.018;
-          particles.position.x += ((pointer.x * 0.16) - particles.position.x) * 0.016;
-          particles.position.y += ((-pointer.y * 0.1) - particles.position.y) * 0.016;
+          starGroups.forEach(({
+            points,
+            material,
+            geometry,
+            positions,
+            basePositions,
+            gatherOffsets,
+            depth,
+          }, index) => {
+            const driftX = Math.sin((elapsed * (0.11 + (index * 0.025))) + index) * (0.08 + (index * 0.04));
+            const driftY = Math.cos((elapsed * (0.08 + (index * 0.018))) + index) * (0.06 + (index * 0.03));
+            points.rotation.y = elapsed * (0.018 + (depth * 0.009));
+            points.rotation.z = (index * 0.18) + (elapsed * (0.004 + (index * 0.003)));
+            points.rotation.x = Math.sin(elapsed * (0.12 + (depth * 0.018))) * (0.018 + (depth * 0.008));
+            points.position.x += ((((pointer.x * (0.18 + (depth * 0.08))) / depth) + driftX) - points.position.x) * 0.022;
+            points.position.y += ((((-pointer.y * (0.12 + (depth * 0.06))) / depth) + driftY + (scrollVelocity * 0.12 * depth)) - points.position.y) * 0.022;
+            material.opacity = starLayers[index].opacity + (Math.sin((elapsed * 0.9) + (index * 1.4)) * 0.055);
 
-          ring.rotation.z = elapsed * 0.01;
-          ring.position.x += (((pointer.x * 0.22) + 1.2) - ring.position.x) * 0.014;
-          ring.position.y += (((-pointer.y * 0.12) + 0.3) - ring.position.y) * 0.014;
+            const gatherAmount = pointer.strength * (0.78 - (index * 0.09));
+            const positionAttribute = geometry.getAttribute('position');
+            const orbit = elapsed * (0.28 + (index * 0.08));
+            const orbitCos = Math.cos(orbit);
+            const orbitSin = Math.sin(orbit);
+            for (let i = 0; i < starLayers[index].count; i += 1) {
+              const i3 = i * 3;
+              const i2 = i * 2;
+              const targetX = pointerWorldX
+                + (gatherOffsets[i2] * orbitCos)
+                - (gatherOffsets[i2 + 1] * orbitSin);
+              const targetY = pointerWorldY
+                + (gatherOffsets[i2] * orbitSin)
+                + (gatherOffsets[i2 + 1] * orbitCos);
+              const desiredX = basePositions[i3] + ((targetX - basePositions[i3]) * gatherAmount);
+              const desiredY = basePositions[i3 + 1] + ((targetY - basePositions[i3 + 1]) * gatherAmount);
+              positions[i3] += (desiredX - positions[i3]) * (0.035 + (pointer.strength * 0.055));
+              positions[i3 + 1] += (desiredY - positions[i3 + 1]) * (0.035 + (pointer.strength * 0.055));
+            }
+            positionAttribute.needsUpdate = true;
+          });
 
-          coolLight.intensity = 0.28 + Math.sin(elapsed * 0.42) * 0.04;
-          warmLight.intensity = 0.18 + Math.cos(elapsed * 0.46) * 0.03;
+          const movingPositionAttribute = movingGeometry.getAttribute('position');
+          for (let i = 0; i < movingParticleCount; i += 1) {
+            const i3 = i * 3;
+            const velocity = movingVelocities[i];
+            movingPositions[i3] += (
+              velocity.x
+              + (Math.sin((elapsed * 0.7) + velocity.phase) * 0.08)
+              + (scrollVelocity * 0.5)
+            ) * delta;
+            movingPositions[i3 + 1] += (velocity.y + (scrollVelocity * 1.45)) * delta;
 
-          // Subtle collective twinkle around a high, crisp baseline.
-          particlesMaterial.opacity = 0.88 + ((Math.sin(elapsed * 0.24) + 1) * 0.03);
+            if (movingPositions[i3 + 1] > 6.4) movingPositions[i3 + 1] = -6.4;
+            if (movingPositions[i3 + 1] < -6.4) movingPositions[i3 + 1] = 6.4;
+            if (movingPositions[i3] > 9.4) movingPositions[i3] = -9.4;
+            if (movingPositions[i3] < -9.4) movingPositions[i3] = 9.4;
+          }
+          movingPositionAttribute.needsUpdate = true;
+          movingParticles.rotation.z = Math.sin(elapsed * 0.09) * 0.035;
+          movingMaterial.opacity = 0.68 + (Math.sin(elapsed * 1.25) * 0.1);
+          scrollVelocity *= 0.91;
 
           renderer.render(scene, camera);
-          requestAnimationFrame(animate);
+          if (!prefersReducedMotion) requestAnimationFrame(animate);
         }
 
         animate();

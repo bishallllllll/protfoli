@@ -242,14 +242,18 @@ body.particle-ui .luxury-links {
 }
 
 .luxury-hero {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.1fr);
   gap: 28px;
   align-items: stretch;
   min-height: calc(100vh - 150px);
+  overflow: hidden;
 }
 
 .luxury-hero-copy {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -359,6 +363,7 @@ body.particle-ui .luxury-links {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
   min-width: 160px;
   padding: 15px 26px;
   border-radius: 999px;
@@ -368,6 +373,96 @@ body.particle-ui .luxury-links {
   transition: transform 0.45s var(--ease), background-color 0.4s var(--ease),
     border-color 0.4s var(--ease), box-shadow 0.45s var(--ease), color 0.4s var(--ease);
   will-change: transform;
+}
+
+.luxury-button-label {
+  position: relative;
+  z-index: 1;
+}
+
+.luxury-button-icon {
+  --icon-a: #fff5ea;
+  --icon-b: #d57b1f;
+  --icon-shadow: rgba(234, 129, 32, 0.4);
+  --icon-fg: #17110e;
+  position: relative;
+  z-index: 0;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  width: 1.95rem;
+  height: 1.95rem;
+  border-radius: 999px;
+  color: var(--icon-fg);
+  background: linear-gradient(145deg, var(--icon-a), var(--icon-b));
+  box-shadow:
+    0 11px 22px var(--icon-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px) rotate(-8deg) perspective(48px) rotateX(12deg);
+}
+
+.luxury-button-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform: translate(3px, 4px);
+  background: rgba(0, 0, 0, 0.26);
+  opacity: 0.75;
+  z-index: -1;
+}
+
+.luxury-button-icon::after {
+  content: '';
+  position: absolute;
+  inset: 1px 1px auto auto;
+  width: 42%;
+  height: 42%;
+  border-radius: inherit;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.58), transparent 70%);
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.luxury-button-icon svg {
+  position: relative;
+  z-index: 1;
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+  stroke: currentColor;
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.42))
+    drop-shadow(0 4px 7px rgba(0, 0, 0, 0.26));
+}
+
+.luxury-button-icon--github {
+  --icon-a: #3a3a43;
+  --icon-b: #111115;
+  --icon-shadow: rgba(0, 0, 0, 0.42);
+  --icon-fg: #f4f1ea;
+}
+
+.luxury-button-icon--instagram {
+  --icon-a: #feda75;
+  --icon-b: #c13584;
+  --icon-shadow: rgba(193, 53, 132, 0.4);
+  --icon-fg: #fff6f0;
+}
+
+.luxury-button-icon--linkedin {
+  --icon-a: #7fc4ff;
+  --icon-b: #0a66c2;
+  --icon-shadow: rgba(10, 102, 194, 0.42);
+  --icon-fg: #f4f9ff;
+}
+
+.luxury-button-primary .luxury-button-icon {
+  --icon-a: #fff4e4;
+  --icon-b: #e18a2c;
+  --icon-shadow: rgba(234, 129, 32, 0.45);
+  --icon-fg: #18110d;
 }
 
 .luxury-button-primary {
@@ -403,15 +498,18 @@ body.particle-ui .luxury-links {
 /* ---------- Hero visual ---------- */
 
 .luxury-hero-visual {
-  position: relative;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   min-height: 720px;
   overflow: visible;
   background: transparent;
+  pointer-events: none;
 }
 
 .three-hero-scene {
   position: absolute;
-  inset: 2% -6% -8% -8%;
+  inset: 0;
   overflow: visible;
 }
 
@@ -427,14 +525,14 @@ body.particle-ui .luxury-links {
   width: 100%;
   height: 100%;
   display: block;
-  z-index: 2;
+  z-index: 1;
   mix-blend-mode: screen;
   opacity: 1;
 }
 
 .hero-particle-glow {
   inset: 0;
-  z-index: 1;
+  z-index: 0;
   background:
     radial-gradient(circle at 48% 34%, rgba(255, 255, 255, 0.08), transparent 16%),
     radial-gradient(circle at 54% 58%, rgba(120, 210, 255, 0.08), transparent 20%);
@@ -442,24 +540,26 @@ body.particle-ui .luxury-links {
 }
 
 .hero-fade {
-  inset: 0;
-  z-index: 3;
-  /* Edge vignette: keep the face/torso clear, dissolve every outer edge of
-     the visual into the page black so the photo never reads as a rectangle. */
+  inset: -6% -10% -12% -10%;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.92;
+  /* Keep the portrait embedded in the page background instead of sitting on a hard slab. */
   background:
-    radial-gradient(ellipse 76% 84% at 52% 46%, transparent 50%, rgba(8, 8, 8, 0.6) 76%, var(--bg) 100%),
-    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.03), transparent 22%),
-    linear-gradient(180deg, transparent 58%, var(--bg) 98%);
+    radial-gradient(ellipse 84% 92% at 52% 42%, transparent 44%, rgba(8, 8, 8, 0.44) 72%, var(--bg) 100%),
+    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.025), transparent 20%),
+    radial-gradient(120% 72% at 50% 100%, rgba(8, 8, 8, 0.9), transparent 64%);
 }
 
 .portrait-shell {
-  left: 56%;
-  bottom: -4%;
-  width: min(60vw, 760px);
-  height: 108%;
+  left: 78%;
+  bottom: -6%;
+  width: min(50vw, 700px);
+  height: 112%;
   transform: translateX(-50%);
   overflow: hidden;
-  z-index: 0;
+  z-index: 2;
 }
 
 .luxury-portrait-shell {
@@ -473,19 +573,19 @@ body.particle-ui .luxury-links {
   object-fit: cover;
   object-position: center top;
   display: block;
-  filter: grayscale(1) contrast(1.12) brightness(0.78);
-  opacity: 0.96;
+  filter: grayscale(1) contrast(1.08) brightness(0.68);
+  opacity: 0.78;
   /* Dissolve the photo's edges into the star-field background on all sides
      so the character emerges from the same dark field as the UI. */
   -webkit-mask-image:
-    radial-gradient(ellipse 70% 80% at 52% 38%, #000 38%, transparent 82%),
-    linear-gradient(90deg, transparent 0%, #000 22%, #000 82%, transparent 100%),
-    linear-gradient(180deg, #000 0%, #000 30%, rgba(0, 0, 0, 0.55) 62%, transparent 90%);
+    radial-gradient(ellipse 72% 82% at 54% 40%, #000 38%, transparent 84%),
+    linear-gradient(90deg, transparent 0%, #000 18%, #000 84%, transparent 100%),
+    linear-gradient(180deg, #000 0%, #000 26%, rgba(0, 0, 0, 0.42) 62%, transparent 92%);
   -webkit-mask-composite: source-in;
   mask-image:
-    radial-gradient(ellipse 70% 80% at 52% 38%, #000 38%, transparent 82%),
-    linear-gradient(90deg, transparent 0%, #000 22%, #000 82%, transparent 100%),
-    linear-gradient(180deg, #000 0%, #000 30%, rgba(0, 0, 0, 0.55) 62%, transparent 90%);
+    radial-gradient(ellipse 72% 82% at 54% 40%, #000 38%, transparent 84%),
+    linear-gradient(90deg, transparent 0%, #000 18%, #000 84%, transparent 100%),
+    linear-gradient(180deg, #000 0%, #000 26%, rgba(0, 0, 0, 0.42) 62%, transparent 92%);
   mask-composite: intersect;
 }
 
@@ -613,8 +713,9 @@ body.particle-ui .luxury-links {
 body.particle-ui .panel,
 body.particle-ui .project-card,
 body.particle-ui .article-card {
-  background: rgba(8, 8, 8, 0.24);
-  backdrop-filter: blur(14px);
+  background: rgba(8, 8, 8, 0.12);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
 }
 
 body.particle-ui .site-header,
@@ -739,7 +840,7 @@ body.particle-ui .site-footer {
  */
 .land-block {
   --accent-1: #58d4ff;
-  --accent-soft: rgba(88, 212, 255, 0.16);
+  --accent-soft: rgba(88, 212, 255, 0.035);
   position: relative;
   width: 100%;
   min-height: 84vh;
@@ -754,13 +855,13 @@ body.particle-ui .site-footer {
   isolation: isolate;
   background:
     radial-gradient(120% 90% at 82% 8%, var(--accent-soft), transparent 52%),
-    radial-gradient(120% 120% at 8% 100%, rgba(255, 255, 255, 0.04), transparent 46%),
-    linear-gradient(158deg, rgba(20, 22, 28, 0.72), rgba(9, 10, 13, 0.66) 58%, rgba(6, 7, 9, 0.7));
+    radial-gradient(120% 120% at 8% 100%, rgba(255, 255, 255, 0.01), transparent 46%),
+    linear-gradient(158deg, rgba(20, 22, 28, 0.09), rgba(9, 10, 13, 0.045) 58%, rgba(6, 7, 9, 0.065));
   box-shadow:
-    var(--shadow),
+    0 18px 54px rgba(0, 0, 0, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(14px) saturate(1.05);
-  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+  backdrop-filter: blur(1.5px) saturate(1.02);
+  -webkit-backdrop-filter: blur(1.5px) saturate(1.02);
 }
 
 /* gradient hairline that picks up the section accent */
@@ -791,7 +892,7 @@ body.particle-ui .site-footer {
   width: 46%;
   height: 70%;
   background: radial-gradient(circle at 60% 40%, var(--accent-1), transparent 62%);
-  opacity: 0.14;
+  opacity: 0.035;
   filter: blur(60px);
   pointer-events: none;
   z-index: 0;
@@ -800,19 +901,19 @@ body.particle-ui .site-footer {
 /* ---- per-section accents (multi-color journey) ---- */
 .land-block--cyan {
   --accent-1: #58d4ff;
-  --accent-soft: rgba(88, 212, 255, 0.16);
+  --accent-soft: rgba(88, 212, 255, 0.035);
 }
 .land-block--amber {
   --accent-1: #e8b04b;
-  --accent-soft: rgba(232, 176, 75, 0.16);
+  --accent-soft: rgba(232, 176, 75, 0.035);
 }
 .land-block--violet {
   --accent-1: #8b6cff;
-  --accent-soft: rgba(139, 108, 255, 0.18);
+  --accent-soft: rgba(139, 108, 255, 0.04);
 }
 .land-block--ember {
   --accent-1: #ea8120;
-  --accent-soft: rgba(234, 129, 32, 0.16);
+  --accent-soft: rgba(234, 129, 32, 0.035);
 }
 
 .land-block-inner {
@@ -858,6 +959,8 @@ body.particle-ui .site-footer {
   gap: 10px;
   margin: 0 0 8px;
   color: color-mix(in srgb, var(--accent-1) 70%, var(--text));
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
 }
 
 .land-block .section-tag::before {
@@ -873,11 +976,11 @@ body.particle-ui .site-footer {
   position: relative;
   z-index: 1;
   margin: 0;
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 700;
-  font-size: clamp(2.7rem, 7.4vw, 6.4rem);
-  line-height: 0.92;
-  letter-spacing: -0.05em;
+  font-family: 'Bodoni Moda', serif;
+  font-weight: 500;
+  font-size: clamp(2.55rem, 6.7vw, 5.8rem);
+  line-height: 1;
+  letter-spacing: -0.045em;
   color: var(--text);
 }
 
@@ -900,8 +1003,22 @@ body.particle-ui .site-footer {
   max-width: 46ch;
   margin: clamp(18px, 2vw, 28px) 0 0;
   color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
   font-size: clamp(1.04rem, 1.4vw, 1.22rem);
-  line-height: 1.7;
+  line-height: 1.72;
+}
+
+.land-block .project-card,
+.land-block .article-card,
+.land-block .luxury-button {
+  font-family: 'DM Sans', sans-serif;
+}
+
+.land-block .project-card h3,
+.land-block .article-card h3 {
+  font-family: 'Bodoni Moda', serif;
+  font-weight: 500;
+  letter-spacing: -0.025em;
 }
 
 .land-cta {
@@ -911,6 +1028,10 @@ body.particle-ui .site-footer {
   flex-wrap: wrap;
   gap: 14px;
   margin-top: clamp(26px, 3vw, 38px);
+}
+
+.land-block--ember .luxury-button {
+  min-width: 140px;
 }
 
 /* slimmer connective tissue between distinct panels */
@@ -972,9 +1093,9 @@ body.particle-ui .site-footer {
   border-radius: clamp(20px, 2vw, 28px);
   border-color: color-mix(in srgb, var(--accent-1) 30%, var(--line-strong));
   background:
-    radial-gradient(110% 130% at 88% 6%, color-mix(in srgb, var(--accent-1) 26%, transparent), transparent 56%),
-    linear-gradient(150deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.012) 50%),
-    rgba(12, 13, 16, 0.5);
+    radial-gradient(110% 130% at 88% 6%, color-mix(in srgb, var(--accent-1) 6%, transparent), transparent 56%),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.018), rgba(255, 255, 255, 0.003) 50%),
+    rgba(12, 13, 16, 0.07);
   box-shadow:
     var(--shadow-card),
     0 0 0 1px color-mix(in srgb, var(--accent-1) 22%, transparent),
@@ -1104,10 +1225,10 @@ body {
 .project-card,
 .article-card {
   background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012) 46%),
-    rgba(12, 13, 16, 0.42);
-  backdrop-filter: blur(16px) saturate(1.1);
-  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+    linear-gradient(155deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.006) 46%),
+    rgba(12, 13, 16, 0.16);
+  backdrop-filter: blur(7px) saturate(1.08);
+  -webkit-backdrop-filter: blur(7px) saturate(1.08);
   transform: translateZ(0);
   transition: transform 0.5s var(--ease), border-color 0.5s var(--ease),
     box-shadow 0.5s var(--ease), background-color 0.5s var(--ease);
@@ -1141,10 +1262,10 @@ body {
 body.particle-ui .project-card,
 body.particle-ui .article-card {
   background:
-    linear-gradient(155deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01) 46%),
-    rgba(8, 8, 8, 0.3);
-  backdrop-filter: blur(16px) saturate(1.1);
-  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+    linear-gradient(155deg, rgba(255, 255, 255, 0.018), rgba(255, 255, 255, 0.002) 46%),
+    rgba(8, 8, 8, 0.055);
+  backdrop-filter: blur(1.5px) saturate(1.03);
+  -webkit-backdrop-filter: blur(1.5px) saturate(1.03);
 }
 
 /* ---------- Focus visibility (a11y) ---------- */
@@ -1188,7 +1309,8 @@ a:focus-visible {
   }
 
   .portrait-shell {
-    width: min(76vw, 620px);
+    left: 72%;
+    width: min(60vw, 620px);
     height: 105%;
   }
 
@@ -1538,5 +1660,73 @@ a:focus-visible {
   .project-card.is-featured:hover,
   .project-card.is-featured:focus-within {
     transform: translateY(-4px);
+  }
+}
+
+/* ---------- Scroll progress light ---------- */
+
+.scroll-line {
+  --scroll-progress: 0;
+  position: fixed;
+  top: 18vh;
+  right: clamp(10px, 1.4vw, 24px);
+  width: 3px;
+  height: 64vh;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.scroll-line__rail,
+.scroll-line__traveler {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border-radius: 999px;
+}
+
+.scroll-line__rail {
+  inset: 0;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+}
+
+.scroll-line__traveler {
+  top: 0;
+  height: clamp(72px, 12vh, 112px);
+  background: linear-gradient(180deg, transparent, #58d4ff 30%, #f4f1ea 62%, #ea8120);
+  box-shadow:
+    0 0 8px rgba(88, 212, 255, 0.95),
+    0 0 22px rgba(88, 212, 255, 0.62),
+    0 0 42px rgba(234, 129, 32, 0.28);
+  will-change: transform;
+}
+
+.scroll-line__head {
+  position: absolute;
+  right: 50%;
+  bottom: -2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff8e8;
+  box-shadow:
+    0 0 7px #fff,
+    0 0 16px #58d4ff,
+    0 0 28px #ea8120;
+  transform: translateX(50%);
+}
+
+@media (max-width: 720px) {
+  .scroll-line {
+    top: 22vh;
+    right: 5px;
+    height: 56vh;
+    opacity: 0.72;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-line {
+    display: none;
   }
 }

@@ -27,73 +27,79 @@ if (canvas) {
         const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
         camera.position.z = 9;
 
-        const ambient = new THREE.AmbientLight(0xffffff, 0.35);
-        scene.add(ambient);
+        const starLayers = [
+          { count: 6200, spread: [9, 11, 9], size: 0.028, opacity: 0.36 },
+          { count: 2600, spread: [12, 14, 12], size: 0.05, opacity: 0.2 },
+          { count: 1000, spread: [7, 8, 6], size: 0.08, opacity: 0.12 },
+        ];
 
-        const coolLight = new THREE.PointLight(0x8edaff, 0.42, 18);
-        coolLight.position.set(-2.6, 1.4, 5.4);
-        scene.add(coolLight);
+        const starGroups = starLayers.map((layer, layerIndex) => {
+          const positions = new Float32Array(layer.count * 3);
+          const basePositions = new Float32Array(layer.count * 3);
+          const colors = new Float32Array(layer.count * 3);
+          const gatherOffsets = new Float32Array(layer.count * 2);
 
-        const warmLight = new THREE.PointLight(0xf1a24e, 0.34, 16);
-        warmLight.position.set(2.9, -0.4, 4.4);
-        scene.add(warmLight);
+          for (let i = 0; i < layer.count; i += 1) {
+            const i3 = i * 3;
+            positions[i3] = (Math.random() - 0.5) * layer.spread[0];
+            positions[i3 + 1] = (Math.random() - 0.5) * layer.spread[1];
+            positions[i3 + 2] = (Math.random() - 0.5) * layer.spread[2];
+            basePositions[i3] = positions[i3];
+            basePositions[i3 + 1] = positions[i3 + 1];
+            basePositions[i3 + 2] = positions[i3 + 2];
 
-        const particleCount = 6000;
-        const positions = new Float32Array(particleCount * 3);
-        const colors = new Float32Array(particleCount * 3);
+            const gatherAngle = Math.random() * Math.PI * 2;
+            const gatherRadius = 0.06 + (Math.pow(Math.random(), 1.8) * (0.55 + (layerIndex * 0.16)));
+            gatherOffsets[i * 2] = Math.cos(gatherAngle) * gatherRadius;
+            gatherOffsets[(i * 2) + 1] = Math.sin(gatherAngle) * gatherRadius;
 
-        for (let i = 0; i < particleCount; i += 1) {
-          const i3 = i * 3;
-          const x = (Math.random() - 0.5) * 9;
-          const y = (Math.random() - 0.5) * 11;
-          const z = (Math.random() - 0.5) * 9;
-          positions[i3] = x;
-          positions[i3 + 1] = y;
-          positions[i3 + 2] = z;
-
-          // White core with a cool-blue minority for depth and temperature.
-          const tone = Math.random();
-          if (tone < 0.8) {
-            colors[i3] = 1.0;
-            colors[i3 + 1] = 1.0;
-            colors[i3 + 2] = 0.99;
-          } else {
-            colors[i3] = 0.68;
-            colors[i3 + 1] = 0.85;
-            colors[i3 + 2] = 1.0;
+            const brightness = 0.72 + Math.pow(Math.random(), 1.5) * 0.28;
+            const tone = Math.random();
+            if (tone < 0.74) {
+              colors[i3] = brightness;
+              colors[i3 + 1] = brightness;
+              colors[i3 + 2] = brightness * 0.99;
+            } else if (tone < 0.94) {
+              colors[i3] = brightness * 0.68;
+              colors[i3 + 1] = brightness * 0.85;
+              colors[i3 + 2] = brightness;
+            } else {
+              colors[i3] = brightness;
+              colors[i3 + 1] = brightness * 0.84;
+              colors[i3 + 2] = brightness * 0.72;
+            }
           }
-        }
 
-        const particlesGeometry = new THREE.BufferGeometry();
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+          const geometry = new THREE.BufferGeometry();
+          geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+          geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-        const particlesMaterial = new THREE.PointsMaterial({
-          size: 0.03,
-          transparent: true,
-          opacity: 0.42,
-          vertexColors: true,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false,
-          sizeAttenuation: true,
+          const material = new THREE.PointsMaterial({
+            size: layer.size,
+            transparent: true,
+            opacity: layer.opacity,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            sizeAttenuation: true,
+          });
+
+          const points = new THREE.Points(geometry, material);
+          points.rotation.z = layerIndex * 0.16;
+          scene.add(points);
+          return {
+            points,
+            material,
+            geometry,
+            positions,
+            basePositions,
+            gatherOffsets,
+            depth: layerIndex + 1,
+          };
         });
 
-        const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particles);
-
-        const arcGeometry = new THREE.TorusGeometry(3.6, 0.014, 10, 220);
-        const arcMaterial = new THREE.MeshBasicMaterial({
-          color: 0xe8edf5,
-          transparent: true,
-          opacity: 0.05,
-        });
-        const arc = new THREE.Mesh(arcGeometry, arcMaterial);
-        arc.rotation.x = Math.PI / 2.4;
-        arc.rotation.y = Math.PI / 5;
-        arc.position.set(1.15, 0.3, -0.5);
-        scene.add(arc);
-
-        const pointer = { x: 0, y: 0 };
+        const pointer = { x: 0, y: 0, active: false, strength: 0 };
+        let touchReleaseTimer = 0;
 
         function resize() {
           const { clientWidth, clientHeight } = sceneRoot;
@@ -106,43 +112,90 @@ if (canvas) {
           const rect = sceneRoot.getBoundingClientRect();
           pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
           pointer.y = ((event.clientY - rect.top) / rect.height) * 2 - 1;
+          pointer.active = (
+            event.clientX >= rect.left
+            && event.clientX <= rect.right
+            && event.clientY >= rect.top
+            && event.clientY <= rect.bottom
+          );
+        }
+
+        function onPointerDown(event) {
+          onPointerMove(event);
+          if (event.pointerType === 'touch') window.clearTimeout(touchReleaseTimer);
+        }
+
+        function onPointerUp(event) {
+          if (event.pointerType === 'touch') {
+            touchReleaseTimer = window.setTimeout(() => {
+              pointer.active = false;
+            }, 220);
+          }
         }
 
         function onPointerLeave() {
-          pointer.x = 0;
-          pointer.y = 0;
+          pointer.active = false;
         }
 
         window.addEventListener('resize', resize);
         resize();
 
         if (prefersReducedMotion) {
-          // Honour reduced-motion: render a single crisp, static frame, no parallax.
           renderer.render(scene, camera);
           return;
         }
 
-        sceneRoot.addEventListener('pointermove', onPointerMove);
-        sceneRoot.addEventListener('pointerleave', onPointerLeave);
+        window.addEventListener('pointermove', onPointerMove, { passive: true });
+        window.addEventListener('pointerdown', onPointerDown, { passive: true });
+        window.addEventListener('pointerup', onPointerUp, { passive: true });
+        window.addEventListener('pointercancel', onPointerUp, { passive: true });
+        window.addEventListener('pointerleave', onPointerLeave);
 
         const clock = new THREE.Clock();
 
         function animate() {
           const elapsed = clock.getElapsedTime();
+          pointer.strength += ((pointer.active ? 1 : 0) - pointer.strength) * 0.09;
+          const viewHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)) * camera.position.z;
+          const pointerWorldX = pointer.x * viewHeight * camera.aspect * 0.5;
+          const pointerWorldY = -pointer.y * viewHeight * 0.5;
 
-          particles.rotation.y = elapsed * 0.006;
-          particles.rotation.x = Math.sin(elapsed * 0.03) * 0.022;
-          particles.position.x += ((pointer.x * 0.18) - particles.position.x) * 0.024;
-          particles.position.y += ((-pointer.y * 0.12) - particles.position.y) * 0.024;
+          starGroups.forEach(({
+            points,
+            material,
+            geometry,
+            positions,
+            basePositions,
+            gatherOffsets,
+            depth,
+          }, index) => {
+            points.rotation.y = elapsed * (0.0038 + (depth * 0.0019));
+            points.rotation.x = Math.sin(elapsed * (0.026 + (depth * 0.004))) * (0.01 + (depth * 0.006));
+            points.position.x += (((pointer.x * (0.1 + (depth * 0.05))) / depth) - points.position.x) * 0.024;
+            points.position.y += (((-pointer.y * (0.07 + (depth * 0.04))) / depth) - points.position.y) * 0.024;
+            material.opacity = starLayers[index].opacity + (Math.sin((elapsed * 0.24) + (index * 1.35)) * 0.028);
 
-          arc.rotation.z = elapsed * 0.01;
-          arc.position.x += (((pointer.x * 0.24) + 1.15) - arc.position.x) * 0.014;
-          arc.position.y += (((-pointer.y * 0.12) + 0.3) - arc.position.y) * 0.014;
-
-          coolLight.intensity = 0.34 + Math.sin(elapsed * 0.38) * 0.04;
-          warmLight.intensity = 0.24 + Math.cos(elapsed * 0.42) * 0.03;
-
-          particlesMaterial.opacity = 0.34 + ((Math.sin(elapsed * 0.24) + 1) * 0.03);
+            const gatherAmount = pointer.strength * (0.76 - (index * 0.1));
+            const positionAttribute = geometry.getAttribute('position');
+            const orbit = elapsed * (0.32 + (index * 0.08));
+            const orbitCos = Math.cos(orbit);
+            const orbitSin = Math.sin(orbit);
+            for (let i = 0; i < starLayers[index].count; i += 1) {
+              const i3 = i * 3;
+              const i2 = i * 2;
+              const targetX = pointerWorldX
+                + (gatherOffsets[i2] * orbitCos)
+                - (gatherOffsets[i2 + 1] * orbitSin);
+              const targetY = pointerWorldY
+                + (gatherOffsets[i2] * orbitSin)
+                + (gatherOffsets[i2 + 1] * orbitCos);
+              const desiredX = basePositions[i3] + ((targetX - basePositions[i3]) * gatherAmount);
+              const desiredY = basePositions[i3 + 1] + ((targetY - basePositions[i3 + 1]) * gatherAmount);
+              positions[i3] += (desiredX - positions[i3]) * (0.04 + (pointer.strength * 0.06));
+              positions[i3 + 1] += (desiredY - positions[i3 + 1]) * (0.04 + (pointer.strength * 0.06));
+            }
+            positionAttribute.needsUpdate = true;
+          });
 
           if (portraitShell) {
             const tx = pointer.x * 7;

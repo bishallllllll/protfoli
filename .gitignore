@@ -1,0 +1,9 @@
+# Local agent and editor state
+.agents/
+.claude/
+.codex/
+
+# OS and temporary files
+.DS_Store
+*.swp
+*~
