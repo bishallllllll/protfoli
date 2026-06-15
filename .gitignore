@@ -7,3 +7,6 @@
 .DS_Store
 *.swp
 *~
+
+# Secrets — never commit API keys
+keys_and_endpoints.md
